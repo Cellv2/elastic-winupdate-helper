@@ -22,7 +22,7 @@
         "compose:create": "docker-compose up -d",
         "compose:start": "docker-compose start",
         "compose:stop": "docker-compose stop",
-        "compose:delete": "docker-compose down -s -v",
+        "compose:delete": "docker-compose down -v",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
