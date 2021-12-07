@@ -1,22 +1,40 @@
 import React from "react";
-import logo from "./logo.svg";
-import { Counter } from "./features/counter/Counter";
+import RbCol from "react-bootstrap/Col";
+import RbContainer from "react-bootstrap/Container";
+import RbRow from "react-bootstrap/Row";
 import "./App.css";
-import ClusterInfo from "./components/ClusterInfo";
-import NodeInfo from "./components/NodeInfo";
-import ClusterActions from "./components/ClusterActions";
 import BackupActions from "./components/BackupActions";
+import ClusterActions from "./components/ClusterActions";
+import ClusterInfo from "./components/ClusterInfo";
 import Header from "./components/Header";
+import NodeInfo from "./components/NodeInfo";
+import Sidebar from "./components/Sidebar";
+import { Counter } from "./features/counter/Counter";
+import logo from "./logo.svg";
 
 function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <Header heading="Connected Cluster" />
-                <NodeInfo />
-                <ClusterInfo />
-                <ClusterActions />
-                <BackupActions />
+                <RbContainer fluid>
+                    <RbRow>
+                        <RbCol xs={2} />
+                        <RbCol>
+                            <Header heading="Connected Cluster" />
+                        </RbCol>
+                    </RbRow>
+                    <RbRow>
+                        <RbCol xs={2}>
+                            <Sidebar />
+                        </RbCol>
+                        <RbCol>
+                            <NodeInfo />
+                            <ClusterInfo />
+                            <ClusterActions />
+                            <BackupActions />
+                        </RbCol>
+                    </RbRow>
+                </RbContainer>
                 <img src={logo} className="App-logo" alt="logo" />
                 <Counter />
                 <p>
