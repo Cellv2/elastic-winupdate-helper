@@ -3,12 +3,14 @@ import logo from "./logo.svg";
 import { Counter } from "./features/counter/Counter";
 import "./App.css";
 import ClusterInfo from "./components/ClusterInfo";
+import NodeInfo from "./components/NodeInfo";
 
 function App() {
     return (
         <div className="App">
             <header className="App-header">
                 <ClusterInfo />
+                <NodeInfo />
                 <img src={logo} className="App-logo" alt="logo" />
                 <Counter />
                 <p>

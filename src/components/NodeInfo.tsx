@@ -3,68 +3,64 @@ import { useTable } from "react-table";
 
 type Props = {};
 
-type ElasticClusterHealthInfo = {
-    clusterName: string;
-    status: string;
-    nodeTotal: number;
-    startupTime: string;
-    relocating: number;
-    initialising: number;
-    unassigned: number;
-    activeShardPct: number;
+type ElasticNodeInfo = {
+    master: string;
+    nodeName: string;
+    heapPct: number;
+    ramPct: number;
+    cpuPct: number;
 };
 
-const ClusterInfo = (props: Props) => {
+const NodeInfo = (props: Props) => {
     const data = React.useMemo(
         () =>
             [
                 {
-                    clusterName: "es-docker-cluster",
-                    status: "green",
-                    nodeTotal: 3,
-                    startupTime: "",
-                    relocating: 0,
-                    initialising: 0,
-                    unassigned: 0,
-                    activeShardPct: 100,
+                    master: "",
+                    nodeName: "es03",
+                    heapPct: 44,
+                    ramPct: 14,
+                    cpuPct: 0,
                 },
-            ] as ElasticClusterHealthInfo[],
+                {
+                    master: "*",
+                    nodeName: "es01",
+                    heapPct: 67,
+                    ramPct: 14,
+                    cpuPct: 0,
+                },
+                {
+                    master: "",
+                    nodeName: "es02",
+                    heapPct: 44,
+                    ramPct: 14,
+                    cpuPct: 0,
+                },
+            ] as ElasticNodeInfo[],
         []
     );
 
     const columns = React.useMemo(
         () => [
             {
-                Header: "Cluster Name",
-                accessor: "clusterName",
+                Header: "Master",
+                accessor: "master",
             },
             {
-                Header: "Status",
-                accessor: "status",
+                Header: "Node Name",
+                accessor: "nodeName",
             },
             {
-                Header: "Node Total",
-                accessor: "nodeTotal",
+                Header: "Heap %",
+                accessor: "heapPct",
             },
             {
-                Header: "Startup Time",
-                accessor: "startupTime",
+                Header: "RAM %",
+                accessor: "ramPct",
             },
             {
-                Header: "Relocating",
-                accessor: "relocating",
-            },
-            {
-                Header: "initialising",
-                accessor: "initialising",
-            },
-            {
-                Header: "Unassigned",
-                accessor: "unassigned",
-            },
-            {
-                Header: "Active Shard %",
-                accessor: "activeShardPct",
+                Header: "CPU %",
+                accessor: "cpuPct",
             },
         ],
         []
@@ -122,4 +118,4 @@ const ClusterInfo = (props: Props) => {
     );
 };
 
-export default ClusterInfo;
+export default NodeInfo;
