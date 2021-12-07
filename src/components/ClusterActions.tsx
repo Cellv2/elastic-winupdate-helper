@@ -9,7 +9,7 @@ type Props = {};
 const ClusterActions = (props: Props) => {
     return (
         <RbContainer fluid>
-            <RbRow>
+            <RbRow className="my-2">
                 <RbCol>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
@@ -19,7 +19,7 @@ const ClusterActions = (props: Props) => {
                 </RbCol>
                 <RbCol>Cluster successfully locked</RbCol>
             </RbRow>
-            <RbRow>
+            <RbRow className="my-2">
                 <RbCol>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
@@ -31,7 +31,7 @@ const ClusterActions = (props: Props) => {
                     Cluster flushed. Total: 100. Successful: 100. Failures: 0
                 </RbCol>
             </RbRow>
-            <RbRow>
+            <RbRow className="my-2">
                 <RbCol>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
@@ -43,7 +43,7 @@ const ClusterActions = (props: Props) => {
                     Shard allocation updated. Shard allocation set to ...
                 </RbCol>
             </RbRow>
-            <RbRow>
+            <RbRow className="my-2">
                 <RbCol>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
@@ -53,7 +53,7 @@ const ClusterActions = (props: Props) => {
                 </RbCol>
                 <RbCol>Cluster successfully unlocked</RbCol>
             </RbRow>
-            <RbRow>
+            <RbRow className="my-2">
                 <RbCol>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">

@@ -11,7 +11,7 @@ type Props = {};
 const BackupActions = (props: Props) => {
     return (
         <RbContainer fluid>
-            <RbAccordion>
+            <RbAccordion flush>
                 <RbAccordion.Item eventKey="0">
                     <RbAccordion.Header
                         className={styles.removeAccordionOutline}
@@ -19,25 +19,31 @@ const BackupActions = (props: Props) => {
                         Cluster Backup Actions
                     </RbAccordion.Header>
                     <RbAccordion.Body>
-                        <RbRow>
+                        <RbRow className="my-2">
                             <RbCol>
-                                <RbButton variant="outline-secondary">
-                                    Backup cluster settings
-                                </RbButton>
+                                <div className="d-grid">
+                                    <RbButton variant="outline-secondary">
+                                        Backup cluster settings
+                                    </RbButton>
+                                </div>
                             </RbCol>
                         </RbRow>
-                        <RbRow>
+                        <RbRow className="my-2">
                             <RbCol>
-                                <RbButton variant="outline-info">
-                                    View saved settings
-                                </RbButton>
+                                <div className="d-grid">
+                                    <RbButton variant="outline-info">
+                                        View saved settings
+                                    </RbButton>
+                                </div>
                             </RbCol>
                         </RbRow>
-                        <RbRow>
+                        <RbRow className="my-2">
                             <RbCol>
-                                <RbButton variant="outline-danger">
-                                    Restore cluster settings
-                                </RbButton>
+                                <div className="d-grid">
+                                    <RbButton variant="outline-danger">
+                                        Restore cluster settings
+                                    </RbButton>
+                                </div>
                             </RbCol>
                         </RbRow>
                     </RbAccordion.Body>

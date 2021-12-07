@@ -6,12 +6,13 @@ import ClusterInfo from "./components/ClusterInfo";
 import NodeInfo from "./components/NodeInfo";
 import ClusterActions from "./components/ClusterActions";
 import BackupActions from "./components/BackupActions";
+import Header from "./components/Header";
 
 function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Connected Cluster Name</h1>
+                <Header heading="Connected Cluster" />
                 <NodeInfo />
                 <ClusterInfo />
                 <ClusterActions />
