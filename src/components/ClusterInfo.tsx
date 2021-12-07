@@ -3,9 +3,10 @@ import { useTable } from "react-table";
 
 type Props = {};
 
-type ElasticClusterHealthInfo = {
+type ElasticClusterInfo = {
     clusterName: string;
     status: string;
+    isLocked: string;
     nodeTotal: number;
     startupTime: string;
     relocating: number;
@@ -19,43 +20,38 @@ const ClusterInfo = (props: Props) => {
         () =>
             [
                 {
-                    clusterName: "es-docker-cluster",
                     status: "green",
+                    isLocked: "false",
                     nodeTotal: 3,
-                    startupTime: "",
                     relocating: 0,
                     initialising: 0,
                     unassigned: 0,
                     activeShardPct: 100,
                 },
-            ] as ElasticClusterHealthInfo[],
+            ] as Partial<ElasticClusterInfo>[],
         []
     );
 
     const columns = React.useMemo(
         () => [
             {
-                Header: "Cluster Name",
-                accessor: "clusterName",
-            },
-            {
                 Header: "Status",
                 accessor: "status",
+            },
+            {
+                Header: "Locked",
+                accessor: "isLocked",
             },
             {
                 Header: "Node Total",
                 accessor: "nodeTotal",
             },
             {
-                Header: "Startup Time",
-                accessor: "startupTime",
-            },
-            {
                 Header: "Relocating",
                 accessor: "relocating",
             },
             {
-                Header: "initialising",
+                Header: "Initialising",
                 accessor: "initialising",
             },
             {

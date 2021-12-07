@@ -4,13 +4,18 @@ import { Counter } from "./features/counter/Counter";
 import "./App.css";
 import ClusterInfo from "./components/ClusterInfo";
 import NodeInfo from "./components/NodeInfo";
+import ClusterActions from "./components/ClusterActions";
+import BackupActions from "./components/BackupActions";
 
 function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <ClusterInfo />
+                <h1>Connected Cluster Name</h1>
                 <NodeInfo />
+                <ClusterInfo />
+                <ClusterActions />
+                <BackupActions />
                 <img src={logo} className="App-logo" alt="logo" />
                 <Counter />
                 <p>
