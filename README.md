@@ -23,8 +23,12 @@ This project's aim is to ease the restarting of ElasticSearch nodes within a clu
   - Set how often the cluster status / health data should refresh. Defaults to 5 secs
   - Set the lock reallocation type (primaries, all)
   - Set lock reallocation for only persistent, or persistent and transient (to account for potential cluster settings already writing to transient)
+  - Set unlock reallocation type - null / all / read from current cluster settings (will save the allocation types before locking)
+  - Set unlock reallocation for only persistent, or persistent and transient. Does nothing if 'Read from current cluster settings' is used
+  - Enable / disable the concurrent shard reallocation count update when locking the cluster
+  - Set the concurrent shard reallocation count for locking the cluster. Only comes into effect if 'concurrent shard reallocation updates - Lock' is enabled
   - Enable / disable the concurrent shard reallocation count update when unlocking the cluster
-  - Set the concurrent shard reallocation count. Only comes into effect if 'concurrent shard reallocation updates' is enabled
+  - Set the concurrent shard reallocation count for unlocking the cluster. Only comes into effect if 'concurrent shard reallocation updates - Unlock' is enabled
   - Set whether to use _flush/synced rather than \_flush (_flush/synced is [deprecated in 7.6, and will be removed in 8.0](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-synced-flush-api.html))
   - [v2] Display a list of known clusters for the menu / sidebar, with a '-' button to remove that cluster. Prompt before removing
   - [v2] Update the list of known clusters for the menu / sidebar. Can enter a single string or an array of strings to add multiple
