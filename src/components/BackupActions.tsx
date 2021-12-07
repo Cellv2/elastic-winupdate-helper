@@ -10,7 +10,7 @@ type Props = {};
 
 const BackupActions = (props: Props) => {
     return (
-        <RbContainer fluid>
+        <RbContainer fluid className="p-0">
             <RbAccordion flush>
                 <RbAccordion.Item eventKey="0">
                     <RbAccordion.Header

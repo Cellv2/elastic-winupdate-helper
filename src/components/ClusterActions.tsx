@@ -8,9 +8,9 @@ type Props = {};
 
 const ClusterActions = (props: Props) => {
     return (
-        <RbContainer fluid>
+        <RbContainer fluid className="mt-5 px-0">
             <RbRow className="my-2">
-                <RbCol>
+                <RbCol xs={4}>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
                             Lock cluster
@@ -20,7 +20,7 @@ const ClusterActions = (props: Props) => {
                 <RbCol>Cluster successfully locked</RbCol>
             </RbRow>
             <RbRow className="my-2">
-                <RbCol>
+                <RbCol xs={4}>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
                             Flush cluster
@@ -32,7 +32,7 @@ const ClusterActions = (props: Props) => {
                 </RbCol>
             </RbRow>
             <RbRow className="my-2">
-                <RbCol>
+                <RbCol xs={4}>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
                             Update shard reallocation count - Lock
@@ -44,7 +44,7 @@ const ClusterActions = (props: Props) => {
                 </RbCol>
             </RbRow>
             <RbRow className="my-2">
-                <RbCol>
+                <RbCol xs={4}>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
                             Unlock cluster
@@ -54,7 +54,7 @@ const ClusterActions = (props: Props) => {
                 <RbCol>Cluster successfully unlocked</RbCol>
             </RbRow>
             <RbRow className="my-2">
-                <RbCol>
+                <RbCol xs={4}>
                     <div className="d-grid">
                         <RbButton variant="outline-secondary">
                             Update shard reallocation count - Unlock
