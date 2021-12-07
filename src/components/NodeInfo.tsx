@@ -1,4 +1,5 @@
 import React from "react";
+import RbTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
 
 type Props = {};
@@ -71,22 +72,12 @@ const NodeInfo = (props: Props) => {
         //@ts-expect-error
         useTable({ columns, data });
     return (
-        <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
+        <RbTable bordered striped hover size="sm" {...getTableProps()}>
             <thead>
                 {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map((column) => (
-                            <th
-                                {...column.getHeaderProps()}
-                                style={{
-                                    borderBottom: "solid 3px red",
-                                    background: "aliceblue",
-                                    color: "black",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                {column.render("Header")}
-                            </th>
+                            <th>{column.render("Header")}</th>
                         ))}
                     </tr>
                 ))}
@@ -98,14 +89,7 @@ const NodeInfo = (props: Props) => {
                         <tr {...row.getRowProps()}>
                             {row.cells.map((cell) => {
                                 return (
-                                    <td
-                                        {...cell.getCellProps()}
-                                        style={{
-                                            padding: "10px",
-                                            border: "solid 1px gray",
-                                            background: "#eee",
-                                        }}
-                                    >
+                                    <td {...cell.getCellProps()}>
                                         {cell.render("Cell")}
                                     </td>
                                 );
@@ -114,7 +98,7 @@ const NodeInfo = (props: Props) => {
                     );
                 })}
             </tbody>
-        </table>
+        </RbTable>
     );
 };
 

@@ -1,37 +1,71 @@
 import React from "react";
+import RbButton from "react-bootstrap/Button";
+import RbCol from "react-bootstrap/Col";
+import RbContainer from "react-bootstrap/Container";
+import RbRow from "react-bootstrap/Row";
 
 type Props = {};
 
 const ClusterActions = (props: Props) => {
     return (
-        <>
-            <div>
-                <button>Lock cluster</button>
-                <span>Cluster successfully locked</span>
-            </div>
-            <div>
-                <button>Flush cluster</button>
-                <span>
+        <RbContainer fluid>
+            <RbRow>
+                <RbCol>
+                    <div className="d-grid">
+                        <RbButton variant="outline-secondary">
+                            Lock cluster
+                        </RbButton>
+                    </div>
+                </RbCol>
+                <RbCol>Cluster successfully locked</RbCol>
+            </RbRow>
+            <RbRow>
+                <RbCol>
+                    <div className="d-grid">
+                        <RbButton variant="outline-secondary">
+                            Flush cluster
+                        </RbButton>
+                    </div>
+                </RbCol>
+                <RbCol>
                     Cluster flushed. Total: 100. Successful: 100. Failures: 0
-                </span>
-            </div>
-            <div>
-                <button>Update shard reallocation count - Lock</button>
-                <span>
+                </RbCol>
+            </RbRow>
+            <RbRow>
+                <RbCol>
+                    <div className="d-grid">
+                        <RbButton variant="outline-secondary">
+                            Update shard reallocation count - Lock
+                        </RbButton>
+                    </div>
+                </RbCol>
+                <RbCol>
                     Shard allocation updated. Shard allocation set to ...
-                </span>
-            </div>
-            <div>
-                <button>Unlock cluster</button>
-                <span>Cluster successfully unlocked</span>
-            </div>
-            <div>
-                <button>Update shard reallocation count - Unlock</button>
-                <span>
+                </RbCol>
+            </RbRow>
+            <RbRow>
+                <RbCol>
+                    <div className="d-grid">
+                        <RbButton variant="outline-secondary">
+                            Unlock cluster
+                        </RbButton>
+                    </div>
+                </RbCol>
+                <RbCol>Cluster successfully unlocked</RbCol>
+            </RbRow>
+            <RbRow>
+                <RbCol>
+                    <div className="d-grid">
+                        <RbButton variant="outline-secondary">
+                            Update shard reallocation count - Unlock
+                        </RbButton>
+                    </div>
+                </RbCol>
+                <RbCol>
                     Shard allocation updated. Shard allocation set to ...
-                </span>
-            </div>
-        </>
+                </RbCol>
+            </RbRow>
+        </RbContainer>
     );
 };
 
