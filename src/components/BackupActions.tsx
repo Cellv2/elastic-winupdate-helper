@@ -10,41 +10,44 @@ type Props = {};
 
 const BackupActions = (props: Props) => {
     return (
-        <RbContainer fluid className="p-0">
+        <RbContainer fluid className="p-0 mt-5">
             <RbAccordion flush>
                 <RbAccordion.Item eventKey="0">
                     <RbAccordion.Header
-                        className={styles.removeAccordionOutline}
+                        className={styles.backupActionsHeader}
                     >
                         Cluster Backup Actions
                     </RbAccordion.Header>
-                    <RbAccordion.Body>
+                    <RbAccordion.Body className="px-0">
                         <RbRow className="my-2">
-                            <RbCol>
+                            <RbCol xs={4}>
                                 <div className="d-grid">
                                     <RbButton variant="outline-secondary">
                                         Backup cluster settings
                                     </RbButton>
                                 </div>
                             </RbCol>
+                            <RbCol>Takes a backup of the cluster settings. Prompts to overwrite if a backup already exists</RbCol>
                         </RbRow>
                         <RbRow className="my-2">
-                            <RbCol>
+                            <RbCol xs={4}>
                                 <div className="d-grid">
                                     <RbButton variant="outline-info">
                                         View saved settings
                                     </RbButton>
                                 </div>
                             </RbCol>
+                            <RbCol>Button disabled if no backup detected. Opens a modal with the cluster settings. Has a copy to clipboard button</RbCol>
                         </RbRow>
                         <RbRow className="my-2">
-                            <RbCol>
+                            <RbCol xs={4}>
                                 <div className="d-grid">
                                     <RbButton variant="outline-danger">
                                         Restore cluster settings
                                     </RbButton>
                                 </div>
                             </RbCol>
+                            <RbCol>Button disabled if no backup detected. Prompts to ensure you want to restore.</RbCol>
                         </RbRow>
                     </RbAccordion.Body>
                 </RbAccordion.Item>

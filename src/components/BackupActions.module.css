@@ -1,4 +1,8 @@
-.removeAccordionOutline > button:focus {
-    box-shadow: none !important;
-    border-color: rgba(0, 0, 0, 0.125) !important;
+/* Overriding bootstrap styles */
+.backupActionsHeader > button:focus,
+.backupActionsHeader > button:not(.collapsed) {
+    box-shadow: none;
+    border-color: rgba(0, 0, 0, 0.125);
+    background-color: rgba(0, 0, 0, 0.05);
+    color: inherit;
 }
