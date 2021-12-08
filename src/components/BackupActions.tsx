@@ -13,13 +13,11 @@ const BackupActions = (props: Props) => {
         <RbContainer fluid className="p-0 mt-5">
             <RbAccordion flush>
                 <RbAccordion.Item eventKey="0">
-                    <RbAccordion.Header
-                        className={styles.backupActionsHeader}
-                    >
+                    <RbAccordion.Header className={styles.backupActionsHeader}>
                         Cluster Backup Actions
                     </RbAccordion.Header>
                     <RbAccordion.Body className="px-0">
-                        <RbRow className="my-2">
+                        <RbRow className="my-2 align-items-center">
                             <RbCol xs={4}>
                                 <div className="d-grid">
                                     <RbButton variant="outline-secondary">
@@ -27,9 +25,12 @@ const BackupActions = (props: Props) => {
                                     </RbButton>
                                 </div>
                             </RbCol>
-                            <RbCol>Takes a backup of the cluster settings. Prompts to overwrite if a backup already exists</RbCol>
+                            <RbCol>
+                                Takes a backup of the cluster settings. Prompts
+                                to overwrite if a backup already exists
+                            </RbCol>
                         </RbRow>
-                        <RbRow className="my-2">
+                        <RbRow className="my-2 align-items-center">
                             <RbCol xs={4}>
                                 <div className="d-grid">
                                     <RbButton variant="outline-info">
@@ -37,9 +38,13 @@ const BackupActions = (props: Props) => {
                                     </RbButton>
                                 </div>
                             </RbCol>
-                            <RbCol>Button disabled if no backup detected. Opens a modal with the cluster settings. Has a copy to clipboard button</RbCol>
+                            <RbCol>
+                                Button disabled if no backup detected. Opens a
+                                modal with the cluster settings. Has a copy to
+                                clipboard button
+                            </RbCol>
                         </RbRow>
-                        <RbRow className="my-2">
+                        <RbRow className="my-2 align-items-center">
                             <RbCol xs={4}>
                                 <div className="d-grid">
                                     <RbButton variant="outline-danger">
@@ -47,7 +52,10 @@ const BackupActions = (props: Props) => {
                                     </RbButton>
                                 </div>
                             </RbCol>
-                            <RbCol>Button disabled if no backup detected. Prompts to ensure you want to restore.</RbCol>
+                            <RbCol>
+                                Button disabled if no backup detected. Prompts
+                                to ensure you want to restore.
+                            </RbCol>
                         </RbRow>
                     </RbAccordion.Body>
                 </RbAccordion.Item>

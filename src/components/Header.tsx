@@ -11,12 +11,9 @@ type Props = {
 const Header = (props: Props) => {
     return (
         <RbContainer fluid className="my-3">
-            <RbRow>
-                <RbCol>
+            <RbRow className="d-flex align-items-center">
+                <RbCol className="offset-sm-2">
                     <h1 className="display-6">{props.heading}</h1>
-                </RbCol>
-                <RbCol xs={1} sm>
-                    {" "}
                 </RbCol>
                 <RbCol className="text-end">
                     <AppSettingsModal />

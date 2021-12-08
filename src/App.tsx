@@ -15,7 +15,6 @@ function App() {
             <div>
                 <RbContainer fluid>
                     <RbRow>
-                        <RbCol xs={2} />
                         <RbCol>
                             <Header heading="Connected Cluster" />
                         </RbCol>
