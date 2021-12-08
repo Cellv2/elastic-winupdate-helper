@@ -83,9 +83,15 @@ const NodeInfo = (props: Props) => {
             <thead>
                 {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map((column) => (
-                            <th>{column.render("Header")}</th>
-                        ))}
+                        {headerGroup.headers.map((column) => {
+                            const { key, ...restHeaderProps } =
+                                column.getHeaderProps();
+                            return (
+                                <th key={key} {...restHeaderProps}>
+                                    {column.render("Header")}
+                                </th>
+                            );
+                        })}
                     </tr>
                 ))}
             </thead>
@@ -95,8 +101,11 @@ const NodeInfo = (props: Props) => {
                     return (
                         <tr {...row.getRowProps()}>
                             {row.cells.map((cell) => {
+                                const { key, ...restCellProps } =
+                                    cell.getCellProps();
+
                                 return (
-                                    <td {...cell.getCellProps()}>
+                                    <td key={key} {...restCellProps}>
                                         {cell.render("Cell")}
                                     </td>
                                 );
