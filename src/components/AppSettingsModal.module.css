@@ -1,0 +1,5 @@
+/* Overriding bootstrap styles */
+.modalButton:focus,
+.modalButton:not(.collapsed) {
+    box-shadow: none;
+}
