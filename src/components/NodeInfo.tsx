@@ -4,12 +4,14 @@ import { useTable } from "react-table";
 
 type Props = {};
 
+// _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
 type ElasticNodeInfo = {
     master: string;
     nodeName: string;
     heapPct: number;
     ramPct: number;
     cpuPct: number;
+    nodeUptime: string;
 };
 
 const NodeInfo = (props: Props) => {
@@ -22,6 +24,7 @@ const NodeInfo = (props: Props) => {
                     heapPct: 44,
                     ramPct: 14,
                     cpuPct: 0,
+                    nodeUptime: "2h",
                 },
                 {
                     master: "*",
@@ -29,6 +32,7 @@ const NodeInfo = (props: Props) => {
                     heapPct: 67,
                     ramPct: 14,
                     cpuPct: 0,
+                    nodeUptime: "2h",
                 },
                 {
                     master: "",
@@ -36,6 +40,7 @@ const NodeInfo = (props: Props) => {
                     heapPct: 44,
                     ramPct: 14,
                     cpuPct: 0,
+                    nodeUptime: "2h",
                 },
             ] as ElasticNodeInfo[],
         []
@@ -62,6 +67,10 @@ const NodeInfo = (props: Props) => {
             {
                 Header: "CPU %",
                 accessor: "cpuPct",
+            },
+            {
+                Header: "Node Uptime",
+                accessor: "nodeUptime",
             },
         ],
         []
