@@ -15,7 +15,7 @@ const Header = (props: Props) => {
                 <RbCol xs={1} sm>
                     {" "}
                 </RbCol>
-                <RbCol>Settings</RbCol>
+                <RbCol className="text-end">Settings</RbCol>
             </RbRow>
         </RbContainer>
     );

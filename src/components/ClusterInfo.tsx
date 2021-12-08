@@ -72,7 +72,13 @@ const ClusterInfo = (props: Props) => {
         //@ts-expect-error
         useTable({ columns, data });
     return (
-        <RbTable striped bordered size="sm" {...getTableProps()}>
+        <RbTable
+            striped
+            bordered
+            size="sm"
+            {...getTableProps()}
+            className="text-center"
+        >
             <thead>
                 {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>

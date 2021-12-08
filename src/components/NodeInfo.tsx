@@ -72,7 +72,14 @@ const NodeInfo = (props: Props) => {
         //@ts-expect-error
         useTable({ columns, data });
     return (
-        <RbTable bordered striped hover size="sm" {...getTableProps()}>
+        <RbTable
+            bordered
+            striped
+            hover
+            size="sm"
+            {...getTableProps()}
+            className="text-center"
+        >
             <thead>
                 {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
