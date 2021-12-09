@@ -6,10 +6,9 @@ type Props = {};
 
 const getClusterStats = async () => {
     try {
-        const response = await fetch("http://localhost:9200/_cat/nodes", {
+        const response = await fetch("http://localhost:9200/_nodes", {
             method: "GET",
         });
-        console.log(response)
         return await response.json();
     } catch (err) {
         console.error(err);
@@ -24,9 +23,8 @@ const ElasticConnectButton = (props: Props) => {
             event.preventDefault();
             // not sure this is needed yet
             // event.persist();
-            console.log("awdasdawdasdw");
             const clusterStats = await getClusterStats();
-            // console.log(clusterStats);
+            console.log(clusterStats);
         }
     };
     return (
