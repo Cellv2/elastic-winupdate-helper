@@ -8,6 +8,7 @@ import ClusterInfo from "./components/ClusterInfo";
 import Header from "./components/Header";
 import NodeInfo from "./components/NodeInfo";
 import Sidebar from "./components/Sidebar";
+import ElasticConnectButton from "./features/elastic/ElasticConnectButton";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                             <Sidebar />
                         </RbCol>
                         <RbCol>
+                            <ElasticConnectButton />
                             <NodeInfo />
                             <ClusterInfo />
                             <ClusterActions />
