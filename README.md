@@ -2,6 +2,10 @@
 
 This project's aim is to ease the restarting of ElasticSearch nodes within a cluster. It should allow an individual to connect to a cluster, check the health of it and also perform simple API calls to allow for rolling restarts as described in the [ElasticSearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/restart-cluster.html).
 
+## Security
+
+That this is a client side only effort for now! While packaging the client into something like Electron and running with a backend API is definitely feasible, for now this is more of a quick tool to get me up and running. While no index documents or similar are retrieved through this tool, **PLEASE THINK ABOUT AND UNDERSTAND THE RISKS OF RUNNING THIS IN THE BROWSER**.
+
 ## Features
 
 - Input a cluster address:port to view the status and health. This should refresh every x seconds and include:
