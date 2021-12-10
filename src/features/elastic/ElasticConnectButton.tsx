@@ -1,6 +1,7 @@
-import React from "react";
-import RbForm from "react-bootstrap/Form";
+import React, { useState } from "react";
 import RbButton from "react-bootstrap/Button";
+import RbForm from "react-bootstrap/Form";
+import RbInputGroup from "react-bootstrap/InputGroup";
 
 type Props = {};
 
@@ -31,14 +32,17 @@ type ElasticClusterStateMasterNodeApiResponse = {
 const getClusterStats = async (clusterUrl: string) => {
     // we need to ensure that the url is correctly formatted for the fetches
     let checkedClusterUrl = clusterUrl.trim();
-    if (!clusterUrl.startsWith("http://") && !clusterUrl.startsWith("https://")) {
-        console.warn("KEKW")
+    if (
+        !clusterUrl.startsWith("http://") &&
+        !clusterUrl.startsWith("https://")
+    ) {
+        console.warn("KEKW");
         // TODO: Show notification saying we are setting this to http://
         checkedClusterUrl = "http://" + clusterUrl;
     }
 
     if (clusterUrl.endsWith("/")) {
-        checkedClusterUrl = checkedClusterUrl.slice(0, -1)
+        checkedClusterUrl = checkedClusterUrl.slice(0, -1);
     }
 
     try {
@@ -48,22 +52,31 @@ const getClusterStats = async (clusterUrl: string) => {
 
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-stats.html
         // const response = await fetch("http://localhost:9200/_nodes/stats", {
-        const response = await fetch(checkedClusterUrl + "/_nodes/stats/os,process", {
-            method: "GET",
-        });
+        const response = await fetch(
+            checkedClusterUrl + "/_nodes/stats/os,process",
+            {
+                method: "GET",
+            }
+        );
 
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html
-        const clusterHealthResponse = await fetch( checkedClusterUrl + "/_cluster/health", {
-            method: "GET",
-        });
+        const clusterHealthResponse = await fetch(
+            checkedClusterUrl + "/_cluster/health",
+            {
+                method: "GET",
+            }
+        );
         const clusterHealth: ElasticClusterHealthApiResponse =
             await clusterHealthResponse.json();
-        console.log(clusterHealth)
+        console.log(clusterHealth);
 
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-state.html#cluster-state-api-path-params
-        const electedMasterResponse = await fetch(checkedClusterUrl + "/_cluster/state/master_node", {
-            method: "GET",
-        });
+        const electedMasterResponse = await fetch(
+            checkedClusterUrl + "/_cluster/state/master_node",
+            {
+                method: "GET",
+            }
+        );
         const electedMaster: ElasticClusterStateMasterNodeApiResponse =
             await electedMasterResponse.json();
         console.log(electedMaster);
@@ -75,6 +88,9 @@ const getClusterStats = async (clusterUrl: string) => {
 };
 
 const ElasticConnectButton = (props: Props) => {
+    const [isFormValid, setIsFormValid] = useState<boolean>(false);
+    const [clusterConnectionVal, setClusterConnectionVal] = useState<string>();
+
     const handleConnectOnClick = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
@@ -86,6 +102,32 @@ const ElasticConnectButton = (props: Props) => {
             console.log(clusterStats);
         }
     };
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        if (event) {
+            const form = event.currentTarget;
+            event.preventDefault();
+
+            if (form.checkValidity() === false) {
+                setIsFormValid(false);
+                event.stopPropagation();
+            }
+
+            setIsFormValid(true);
+            console.log(clusterConnectionVal);
+        }
+    };
+
+    // not the *exact* typing, but it'll do - https://github.com/DefinitelyTyped/DefinitelyTyped/issues/16208
+    const handleClusterConnectionInputChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        if (event) {
+            const value = event.target.value;
+            setClusterConnectionVal(value);
+        }
+    };
+
     return (
         <div
             className="p-2"
@@ -100,18 +142,43 @@ const ElasticConnectButton = (props: Props) => {
             }}
         >
             <h1>THIS IS TEMPORARY</h1>
-            <RbForm>
-                <RbForm.Group className="mb-3" controlId="clusterName">
+            <RbForm
+                noValidate
+                validated={isFormValid}
+                onSubmit={async (e) => await handleSubmit(e)}
+            >
+                {/* <RbForm.Group className="mb-3" controlId="clusterName">
                     <RbForm.Label>Cluster Connection</RbForm.Label>
                     <RbForm.Control type="text" placeholder="cluster:port" />
                     <RbForm.Text className="text-muted">
                         Please enter the URL of the cluster
                     </RbForm.Text>
+                </RbForm.Group> */}
+
+                <RbForm.Group className="mb-3" controlId="validationClusterConnection">
+                    <RbForm.Label>Cluster Connection</RbForm.Label>
+                    <RbInputGroup hasValidation>
+                        <RbForm.Control
+                            type="text"
+                            placeholder="http://cluster:port"
+                            required
+                            onChange={handleClusterConnectionInputChange}
+                            // TODO: maybe think about expanding this pattern?
+                            // ports range from 0 to 65535, so [0-9]{1,5} should encompass any valid port
+                            pattern="^https?:\/\/.{1,}:[0-9]{1,5}\/?"
+                            className="w-100"
+                        />
+                        <RbForm.Control.Feedback type="invalid">
+                            Please ensure the url starts with http:// or
+                            https:// and ends with a port
+                        </RbForm.Control.Feedback>
+                    </RbInputGroup>
                 </RbForm.Group>
+
                 <RbButton
                     variant="primary"
                     type="submit"
-                    onClick={async (e) => await handleConnectOnClick(e)}
+                    // onClick={async (e) => await handleConnectOnClick(e)}
                 >
                     Connect
                 </RbButton>
