@@ -32,14 +32,6 @@ type ElasticClusterStateMasterNodeApiResponse = {
 const getClusterStats = async (clusterUrl: string) => {
     // we need to ensure that the url is correctly formatted for the fetches
     let checkedClusterUrl = clusterUrl.trim();
-    if (
-        !clusterUrl.startsWith("http://") &&
-        !clusterUrl.startsWith("https://")
-    ) {
-        console.warn("KEKW");
-        // TODO: Show notification saying we are setting this to http://
-        checkedClusterUrl = "http://" + clusterUrl;
-    }
 
     if (clusterUrl.endsWith("/")) {
         checkedClusterUrl = checkedClusterUrl.slice(0, -1);
@@ -58,6 +50,8 @@ const getClusterStats = async (clusterUrl: string) => {
                 method: "GET",
             }
         );
+        const nodeStats = await response.json();
+        console.log(nodeStats);
 
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html
         const clusterHealthResponse = await fetch(
@@ -81,32 +75,30 @@ const getClusterStats = async (clusterUrl: string) => {
             await electedMasterResponse.json();
         console.log(electedMaster);
 
-        return await response.json();
+        return nodeStats;
     } catch (err) {
+        // TODO: handle error notifications
         console.error(err);
     }
 };
 
+// TODO: maybe think about expanding this pattern?
+// ports range from 0 to 65535, so [0-9]{1,5} should encompass any valid port
+const clusterValidationRegex = new RegExp("^https?://.{1,}:[0-9]{1,5}/?");
+const isClusterUrlValid = (clusterUrl: string): boolean => {
+    return clusterValidationRegex.test(clusterUrl);
+};
+
 const ElasticConnectButton = (props: Props) => {
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
-    const [clusterConnectionVal, setClusterConnectionVal] = useState<string>();
-
-    const handleConnectOnClick = async (
-        event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ) => {
-        if (event) {
-            event.preventDefault();
-            // not sure this is needed yet
-            // event.persist();
-            const clusterStats = await getClusterStats("http://localhost:9200");
-            console.log(clusterStats);
-        }
-    };
+    const [clusterConnectionVal, setClusterConnectionVal] =
+        useState<string>("");
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         if (event) {
             const form = event.currentTarget;
-            event.preventDefault();
+
+            event.preventDefault(); // we don't want the page reloading
 
             if (form.checkValidity() === false) {
                 setIsFormValid(false);
@@ -115,6 +107,19 @@ const ElasticConnectButton = (props: Props) => {
 
             setIsFormValid(true);
             console.log(clusterConnectionVal);
+            if (isClusterUrlValid(clusterConnectionVal)) {
+                try {
+                    await getClusterStats(clusterConnectionVal);
+                    console.log("connected");
+                } catch (err) {
+                    // TODO: handle error notifications
+                    console.error(err);
+                }
+            } else {
+                // TODO: handle error notifications
+                // this shouldn't really be possible at this point, but just in case
+                console.error("The connection URL was not valid");
+            }
         }
     };
 
@@ -147,15 +152,10 @@ const ElasticConnectButton = (props: Props) => {
                 validated={isFormValid}
                 onSubmit={async (e) => await handleSubmit(e)}
             >
-                {/* <RbForm.Group className="mb-3" controlId="clusterName">
-                    <RbForm.Label>Cluster Connection</RbForm.Label>
-                    <RbForm.Control type="text" placeholder="cluster:port" />
-                    <RbForm.Text className="text-muted">
-                        Please enter the URL of the cluster
-                    </RbForm.Text>
-                </RbForm.Group> */}
-
-                <RbForm.Group className="mb-3" controlId="validationClusterConnection">
+                <RbForm.Group
+                    className="mb-3"
+                    controlId="validationClusterConnection"
+                >
                     <RbForm.Label>Cluster Connection</RbForm.Label>
                     <RbInputGroup hasValidation>
                         <RbForm.Control
@@ -163,9 +163,7 @@ const ElasticConnectButton = (props: Props) => {
                             placeholder="http://cluster:port"
                             required
                             onChange={handleClusterConnectionInputChange}
-                            // TODO: maybe think about expanding this pattern?
-                            // ports range from 0 to 65535, so [0-9]{1,5} should encompass any valid port
-                            pattern="^https?:\/\/.{1,}:[0-9]{1,5}\/?"
+                            pattern={`${clusterValidationRegex.source}`}
                             className="w-100"
                         />
                         <RbForm.Control.Feedback type="invalid">
@@ -175,11 +173,7 @@ const ElasticConnectButton = (props: Props) => {
                     </RbInputGroup>
                 </RbForm.Group>
 
-                <RbButton
-                    variant="primary"
-                    type="submit"
-                    // onClick={async (e) => await handleConnectOnClick(e)}
-                >
+                <RbButton variant="primary" type="submit">
                     Connect
                 </RbButton>
             </RbForm>
