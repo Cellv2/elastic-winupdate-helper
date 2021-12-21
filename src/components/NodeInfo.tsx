@@ -1,18 +1,11 @@
 import React from "react";
 import RbTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
+import { ElasticNodeInfo } from "../types/elastic.types";
 
 type Props = {};
 
 // _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
-type ElasticNodeInfo = {
-    master: string;
-    nodeName: string;
-    heapPct: number;
-    ramPct: number;
-    cpuPct: number;
-    nodeUptime: string;
-};
 
 const NodeInfo = (props: Props) => {
     const data = React.useMemo(
