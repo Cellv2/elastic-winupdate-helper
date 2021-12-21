@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import RbButton from "react-bootstrap/Button";
 import RbForm from "react-bootstrap/Form";
 import RbInputGroup from "react-bootstrap/InputGroup";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getNodeInfoAsync, selectClusterInfo } from "./elasticSlice";
 
 type Props = {};
 
@@ -90,6 +92,8 @@ const isClusterUrlValid = (clusterUrl: string): boolean => {
 };
 
 const ElasticConnectButton = (props: Props) => {
+    const clusterInfo = useAppSelector(selectClusterInfo);
+    const dispatch = useAppDispatch();
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const [clusterConnectionVal, setClusterConnectionVal] =
         useState<string>("");
@@ -109,8 +113,10 @@ const ElasticConnectButton = (props: Props) => {
             console.log(clusterConnectionVal);
             if (isClusterUrlValid(clusterConnectionVal)) {
                 try {
-                    await getClusterStats(clusterConnectionVal);
+                    // await getClusterStats(clusterConnectionVal);
+                    await dispatch(getNodeInfoAsync(clusterConnectionVal))
                     console.log("connected");
+                    console.log("PRINTING THE THINGIES - ", clusterInfo)
                 } catch (err) {
                     // TODO: handle error notifications
                     console.error(err);
