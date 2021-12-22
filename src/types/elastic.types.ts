@@ -7,7 +7,7 @@ export type ElasticNodeInfo = {
     nodeUptime: string;
 };
 
-export type ElasticClusterHealthApiResponse = {
+export type ElasticClusterHealth = {
     cluster_name: string;
     status: string;
     timed_out: boolean;
@@ -25,8 +25,15 @@ export type ElasticClusterHealthApiResponse = {
     active_shards_percent_as_number: number;
 };
 
-export type ElasticClusterStateMasterNodeApiResponse = {
+export type ElasticClusterStateMasterNodeData = {
     cluster_name: string;
     cluster_uuid: string;
     master_node: string;
+    nodes: {
+        [key: string]: {
+            name: string;
+            ephemeral_id: string;
+            transport_address: string;
+        };
+    };
 };
