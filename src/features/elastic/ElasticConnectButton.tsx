@@ -7,83 +7,6 @@ import { getNodeInfoAsync, selectClusterInfo } from "./elasticSlice";
 
 type Props = {};
 
-type ElasticClusterHealthApiResponse = {
-    cluster_name: string;
-    status: string;
-    timed_out: boolean;
-    number_of_nodes: number;
-    number_of_data_nodes: number;
-    active_primary_shards: number;
-    active_shards: number;
-    relocating_shards: number;
-    initializing_shards: number;
-    unassigned_shards: number;
-    delayed_unassigned_shards: number;
-    number_of_pending_tasks: number;
-    number_of_in_flight_fetch: number;
-    task_max_waiting_in_queue_millis: number;
-    active_shards_percent_as_number: number;
-};
-
-type ElasticClusterStateMasterNodeApiResponse = {
-    cluster_name: string;
-    cluster_uuid: string;
-    master_node: string;
-};
-
-const getClusterStats = async (clusterUrl: string) => {
-    // we need to ensure that the url is correctly formatted for the fetches
-    let checkedClusterUrl = clusterUrl.trim();
-
-    if (clusterUrl.endsWith("/")) {
-        checkedClusterUrl = checkedClusterUrl.slice(0, -1);
-    }
-
-    try {
-        // _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
-        // do existing tools monitor host % cpu/ram or process
-        // name,jvm.mem.heap_used_percent,process.cpu.percent,process.mem.total_virtual_in_bytes,process.os.total_in_bytes
-
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-stats.html
-        // const response = await fetch("http://localhost:9200/_nodes/stats", {
-        const response = await fetch(
-            checkedClusterUrl + "/_nodes/stats/os,process",
-            {
-                method: "GET",
-            }
-        );
-        const nodeStats = await response.json();
-        console.log(nodeStats);
-
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html
-        const clusterHealthResponse = await fetch(
-            checkedClusterUrl + "/_cluster/health",
-            {
-                method: "GET",
-            }
-        );
-        const clusterHealth: ElasticClusterHealthApiResponse =
-            await clusterHealthResponse.json();
-        console.log(clusterHealth);
-
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-state.html#cluster-state-api-path-params
-        const electedMasterResponse = await fetch(
-            checkedClusterUrl + "/_cluster/state/master_node",
-            {
-                method: "GET",
-            }
-        );
-        const electedMaster: ElasticClusterStateMasterNodeApiResponse =
-            await electedMasterResponse.json();
-        console.log(electedMaster);
-
-        return nodeStats;
-    } catch (err) {
-        // TODO: handle error notifications
-        console.error(err);
-    }
-};
-
 // TODO: maybe think about expanding this pattern?
 // ports range from 0 to 65535, so [0-9]{1,5} should encompass any valid port
 const clusterValidationRegex = new RegExp("^https?://.{1,}:[0-9]{1,5}/?");
@@ -114,9 +37,9 @@ const ElasticConnectButton = (props: Props) => {
             if (isClusterUrlValid(clusterConnectionVal)) {
                 try {
                     // await getClusterStats(clusterConnectionVal);
-                    await dispatch(getNodeInfoAsync(clusterConnectionVal))
+                    await dispatch(getNodeInfoAsync(clusterConnectionVal));
                     console.log("connected");
-                    console.log("PRINTING THE THINGIES - ", clusterInfo)
+                    console.log("PRINTING THE THINGIES - ", clusterInfo);
                 } catch (err) {
                     // TODO: handle error notifications
                     console.error(err);
