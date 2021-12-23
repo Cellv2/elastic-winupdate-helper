@@ -2,6 +2,7 @@ import React from "react";
 import RbTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
 import { useAppSelector } from "../app/hooks";
+import { CLUSTER_INFO_COLUMNS } from "../constants/component.constants";
 import { selectClusterHealth } from "../features/elastic/elasticSlice";
 import { mapClusterHealthComponentData } from "../utils/mappers.utils";
 
@@ -13,39 +14,7 @@ const ClusterInfo = (props: Props) => {
     const mappedData = mapClusterHealthComponentData(clusterHealth);
     const data = React.useMemo(() => [mappedData], [mappedData]);
 
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: "Status",
-                accessor: "status",
-            },
-            {
-                Header: "Locked",
-                accessor: "isLocked",
-            },
-            {
-                Header: "Node Total",
-                accessor: "nodeTotal",
-            },
-            {
-                Header: "Relocating",
-                accessor: "relocating",
-            },
-            {
-                Header: "Initialising",
-                accessor: "initialising",
-            },
-            {
-                Header: "Unassigned",
-                accessor: "unassigned",
-            },
-            {
-                Header: "Active Shard %",
-                accessor: "activeShardPct",
-            },
-        ],
-        []
-    );
+    const columns = React.useMemo(() => CLUSTER_INFO_COLUMNS, []);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         // FIXME - typing for this are incorrect
