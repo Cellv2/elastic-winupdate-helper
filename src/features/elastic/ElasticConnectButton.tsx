@@ -3,7 +3,7 @@ import RbButton from "react-bootstrap/Button";
 import RbForm from "react-bootstrap/Form";
 import RbInputGroup from "react-bootstrap/InputGroup";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getNodeInfoAsync, selectClusterInfo } from "./elasticSlice";
+import { getNodeInfoAsync, selectClusterNodeStats } from "./elasticSlice";
 
 type Props = {};
 
@@ -15,7 +15,7 @@ const isClusterUrlValid = (clusterUrl: string): boolean => {
 };
 
 const ElasticConnectButton = (props: Props) => {
-    const clusterInfo = useAppSelector(selectClusterInfo);
+    const clusterInfo = useAppSelector(selectClusterNodeStats);
     const dispatch = useAppDispatch();
     const [isFormValid, setIsFormValid] = useState<boolean>(false);
     const [clusterConnectionVal, setClusterConnectionVal] =

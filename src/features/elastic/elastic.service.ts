@@ -24,7 +24,7 @@ export const getClusterStats = async (clusterUrl: string) => {
         const masterNodeName = masterNodeData.nodes[masterNodeId].name;
         console.log(masterNodeName);
 
-        return nodeStats;
+        return { nodeStats, clusterHealth, masterNodeName };
     } catch (err) {
         // TODO: handle error notifications
         console.error(err);
