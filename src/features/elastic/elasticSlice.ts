@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../../app/store";
 import {
     ElasticClusterHealth,
-    ElasticNodeInfo,
+    ElasticNodeStats,
 } from "../../types/elastic.types";
 import { getClusterStats } from "./elastic.service";
 
@@ -11,7 +11,7 @@ export type ElasticState = {
     status: "idle" | "loading" | "failed";
     clusterHealth: ElasticClusterHealth;
     masterNodeName: string;
-    nodeStats: ElasticNodeInfo[]; // _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
+    nodeStats: ElasticNodeStats; // _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
 };
 
 const emptyClusterHealth: ElasticClusterHealth = {
@@ -32,15 +32,127 @@ const emptyClusterHealth: ElasticClusterHealth = {
     unassigned_shards: 0,
 };
 
+const emptyNodeStats: ElasticNodeStats = {
+    cluster_name: "Not Connected",
+    nodes: {
+        "Unknown Node": {
+            host: "Unknown",
+            ip: "Unknown",
+            transport_address: "Unknown",
+            name: "Unknown Node",
+            jvm: {
+                timestamp: 0,
+                uptime_in_millis: 0,
+                mem: {
+                    heap_used_in_bytes: 0,
+                    heap_used_percent: 0,
+                    heap_committed_in_bytes: 0,
+                    heap_max_in_bytes: 0,
+                    non_heap_used_in_bytes: 0,
+                    non_heap_committed_in_bytes: 0,
+                    pools: {
+                        young: {
+                            used_in_bytes: 0,
+                            max_in_bytes: 0,
+                            peak_used_in_bytes: 0,
+                            peak_max_in_bytes: 0,
+                        },
+                        old: {
+                            used_in_bytes: 0,
+                            max_in_bytes: 0,
+                            peak_used_in_bytes: 0,
+                            peak_max_in_bytes: 0,
+                        },
+                        survivor: {
+                            used_in_bytes: 0,
+                            max_in_bytes: 0,
+                            peak_used_in_bytes: 0,
+                            peak_max_in_bytes: 0,
+                        },
+                    },
+                },
+                threads: {
+                    count: 0,
+                    peak_count: 0,
+                },
+                gc: {
+                    collectors: {
+                        young: {
+                            collection_count: 0,
+                            collection_time_in_millis: 0,
+                        },
+                        old: {
+                            collection_count: 0,
+                            collection_time_in_millis: 0,
+                        },
+                    },
+                },
+                buffer_pools: {
+                    mapped: {
+                        count: 0,
+                        used_in_bytes: 0,
+                        total_capacity_in_bytes: 0,
+                    },
+                    direct: {
+                        count: 0,
+                        used_in_bytes: 0,
+                        total_capacity_in_bytes: 0,
+                    },
+                    "mapped - 'non-volatile memory'": {
+                        count: 0,
+                        used_in_bytes: 0,
+                        total_capacity_in_bytes: 0,
+                    },
+                },
+                classes: {
+                    current_loaded_count: 0,
+                    total_loaded_count: 0,
+                    total_unloaded_count: 0,
+                },
+            },
+            os: {
+                timestamp: 0,
+                cpu: {
+                    percent: 0,
+                    load_average: {
+                        "1m": 0.0,
+                        "5m": 0.0,
+                        "15m": 0.0,
+                    },
+                },
+                mem: {
+                    total_in_bytes: 0,
+                    free_in_bytes: 0,
+                    used_in_bytes: 0,
+                    free_percent: 0,
+                    used_percent: 0,
+                },
+            },
+            process: {
+                timestamp: 0,
+                open_file_descriptors: 0,
+                max_file_descriptors: 0,
+                cpu: {
+                    percent: 0,
+                    total_in_millis: 0,
+                },
+                mem: {
+                    total_virtual_in_bytes: 0,
+                },
+            },
+        },
+    },
+};
+
 const initialState: ElasticState = {
     value: 0,
     status: "idle",
     clusterHealth: emptyClusterHealth,
     masterNodeName: "Unknown",
-    nodeStats: [],
+    nodeStats: emptyNodeStats,
 };
 
-export const getNodeInfoAsync = createAsyncThunk(
+export const getClusterInfoAsync = createAsyncThunk(
     "elastic/getClusterStats",
     async (clusterUrl: string) => {
         const response = await getClusterStats(clusterUrl);
@@ -53,21 +165,21 @@ export const elasticSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getNodeInfoAsync.pending, (state) => {
+        builder.addCase(getClusterInfoAsync.pending, (state) => {
             state.status = "loading";
         });
-        builder.addCase(getNodeInfoAsync.fulfilled, (state, action) => {
+        builder.addCase(getClusterInfoAsync.fulfilled, (state, action) => {
             state.status = "idle";
             state.clusterHealth =
                 action.payload?.clusterHealth ?? emptyClusterHealth;
             state.masterNodeName = action.payload?.masterNodeName ?? "Unknown";
-            state.nodeStats = action.payload?.nodeStats;
+            state.nodeStats = action.payload?.nodeStats ?? emptyNodeStats;
         });
-        builder.addCase(getNodeInfoAsync.rejected, (state) => {
+        builder.addCase(getClusterInfoAsync.rejected, (state) => {
             state.status = "failed";
             state.clusterHealth = emptyClusterHealth;
             state.masterNodeName = "Unknown";
-            state.nodeStats = [];
+            state.nodeStats = emptyNodeStats;
         });
     },
 });
@@ -81,6 +193,9 @@ export const selectClusterHealth = (state: RootState) =>
     state.elastic.clusterHealth;
 
 export const selectClusterName = (state: RootState) =>
-    state.elastic.clusterHealth?.cluster_name;
+    state.elastic.clusterHealth.cluster_name;
+
+export const selectMasterNodeName = (state: RootState) =>
+    state.elastic.masterNodeName;
 
 export default elasticSlice.reducer;

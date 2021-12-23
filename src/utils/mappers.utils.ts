@@ -1,18 +1,43 @@
-import { ElasticClusterHealth } from "../types/elastic.types";
-import { ElasticClusterInfo } from "../types/component.types";
+import { ElasticClusterInfo, ElasticNodeInfo } from "../types/component.types";
+import { ElasticClusterHealth, ElasticNodeStats } from "../types/elastic.types";
 
 export const mapClusterHealthComponentData = (
-    data: ElasticClusterHealth
+    clusterHealthData: ElasticClusterHealth
 ): Partial<ElasticClusterInfo> => {
     const mappedObj: Partial<ElasticClusterInfo> = {
-        status: data.status,
+        status: clusterHealthData.status,
         isLocked: "false",
-        nodeTotal: data.number_of_nodes,
-        relocating: data.relocating_shards,
-        initialising: data.initializing_shards,
-        unassigned: data.unassigned_shards,
-        activeShardPct: data.active_shards_percent_as_number,
+        nodeTotal: clusterHealthData.number_of_nodes,
+        relocating: clusterHealthData.relocating_shards,
+        initialising: clusterHealthData.initializing_shards,
+        unassigned: clusterHealthData.unassigned_shards,
+        activeShardPct: clusterHealthData.active_shards_percent_as_number,
     };
 
     return mappedObj;
+};
+
+export const mapClusterNodeStatsComponentData = (
+    nodeStatsData: ElasticNodeStats,
+    masterNodeName: string
+): ElasticNodeInfo[] => {
+    const nodeIds = Object.keys(nodeStatsData.nodes);
+    const arrayedNodeStats = nodeIds.map((key) => nodeStatsData.nodes[key]);
+
+    const mappedArr: ElasticNodeInfo[] = arrayedNodeStats.map((node) => {
+        const master = node.name === masterNodeName ? "*" : "";
+
+        const mappedObj: ElasticNodeInfo = {
+            cpuPct: node.os.cpu.percent,
+            heapPct: node.jvm.mem.heap_used_percent,
+            nodeName: node.name,
+            nodeUptime: "FIX ME!", // FIXME: calculate uptime (and where do we get this from? jvm? process?)
+            ramPct: node.os.mem.used_percent, // TODO: is this the correct thing we are looking for? is it os or process?
+            master,
+        };
+
+        return mappedObj;
+    });
+
+    return mappedArr;
 };

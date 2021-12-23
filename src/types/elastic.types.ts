@@ -1,10 +1,117 @@
-export type ElasticNodeInfo = {
-    master: string;
-    nodeName: string;
-    heapPct: number;
-    ramPct: number;
-    cpuPct: number;
-    nodeUptime: string;
+export type ElasticNodeStats = {
+    cluster_name: string;
+    nodes: {
+        [key: string]: {
+            name: string;
+            transport_address: string;
+            host: string;
+            ip: string;
+            os: ElasticNodeStatsOs;
+            process: ElasticNodeStatsProcess;
+            jvm: ElasticNodeStatsJvm;
+        };
+    };
+};
+
+type ElasticNodeStatsProcess = {
+    timestamp: number;
+    open_file_descriptors: number;
+    max_file_descriptors: number;
+    cpu: {
+        percent: number;
+        total_in_millis: number;
+    };
+    mem: {
+        total_virtual_in_bytes: number;
+    };
+};
+type ElasticNodeStatsOs = {
+    timestamp: number;
+    cpu: {
+        percent: number;
+        load_average: {
+            "1m": number;
+            "5m": number;
+            "15m": number;
+        };
+    };
+    mem: {
+        total_in_bytes: number;
+        free_in_bytes: number;
+        used_in_bytes: number;
+        free_percent: number;
+        used_percent: number;
+    };
+};
+type ElasticNodeStatsJvm = {
+    timestamp: number;
+    uptime_in_millis: number;
+    mem: {
+        heap_used_in_bytes: number;
+        heap_used_percent: number;
+        heap_committed_in_bytes: number;
+        heap_max_in_bytes: number;
+        non_heap_used_in_bytes: number;
+        non_heap_committed_in_bytes: number;
+        pools: {
+            young: {
+                used_in_bytes: number;
+                max_in_bytes: number;
+                peak_used_in_bytes: number;
+                peak_max_in_bytes: number;
+            };
+            old: {
+                used_in_bytes: number;
+                max_in_bytes: number;
+                peak_used_in_bytes: number;
+                peak_max_in_bytes: number;
+            };
+            survivor: {
+                used_in_bytes: number;
+                max_in_bytes: number;
+                peak_used_in_bytes: number;
+                peak_max_in_bytes: number;
+            };
+        };
+    };
+    threads: {
+        count: number;
+        peak_count: number;
+    };
+    gc: {
+        collectors: {
+            young: {
+                collection_count: number;
+                collection_time_in_millis: number;
+            };
+            old: {
+                collection_count: number;
+                collection_time_in_millis: number;
+            };
+        };
+    };
+    buffer_pools: {
+        mapped: {
+            count: number;
+            used_in_bytes: number;
+            total_capacity_in_bytes: number;
+        };
+        direct: {
+            count: number;
+            used_in_bytes: number;
+            total_capacity_in_bytes: number;
+        };
+        "mapped - 'non-volatile memory'": {
+            count: number;
+            used_in_bytes: number;
+            total_capacity_in_bytes: number;
+        };
+    };
+    classes: {
+        current_loaded_count: number;
+        total_loaded_count: number;
+        total_unloaded_count: number;
+    };
 };
 
 export type ElasticClusterHealth = {

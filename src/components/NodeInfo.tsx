@@ -1,43 +1,26 @@
 import React from "react";
 import RbTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
-import { ElasticNodeInfo } from "../types/elastic.types";
+import { useAppSelector } from "../app/hooks";
+import {
+    selectClusterNodeStats,
+    selectMasterNodeName,
+} from "../features/elastic/elasticSlice";
+import { mapClusterNodeStatsComponentData } from "../utils/mappers.utils";
 
 type Props = {};
 
 // _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
 
 const NodeInfo = (props: Props) => {
-    const data = React.useMemo(
-        () =>
-            [
-                {
-                    master: "",
-                    nodeName: "es03",
-                    heapPct: 44,
-                    ramPct: 14,
-                    cpuPct: 0,
-                    nodeUptime: "2h",
-                },
-                {
-                    master: "*",
-                    nodeName: "es01",
-                    heapPct: 67,
-                    ramPct: 14,
-                    cpuPct: 0,
-                    nodeUptime: "2h",
-                },
-                {
-                    master: "",
-                    nodeName: "es02",
-                    heapPct: 44,
-                    ramPct: 14,
-                    cpuPct: 0,
-                    nodeUptime: "2h",
-                },
-            ] as ElasticNodeInfo[],
-        []
+    const clusterNodeStats = useAppSelector(selectClusterNodeStats);
+    const masterNode = useAppSelector(selectMasterNodeName);
+
+    const mappedData = mapClusterNodeStatsComponentData(
+        clusterNodeStats,
+        masterNode
     );
+    const data = React.useMemo(() => mappedData, [mappedData]);
 
     const columns = React.useMemo(
         () => [

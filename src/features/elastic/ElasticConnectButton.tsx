@@ -3,7 +3,7 @@ import RbButton from "react-bootstrap/Button";
 import RbForm from "react-bootstrap/Form";
 import RbInputGroup from "react-bootstrap/InputGroup";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getNodeInfoAsync, selectClusterNodeStats } from "./elasticSlice";
+import { getClusterInfoAsync, selectClusterNodeStats } from "./elasticSlice";
 
 type Props = {};
 
@@ -37,7 +37,7 @@ const ElasticConnectButton = (props: Props) => {
             if (isClusterUrlValid(clusterConnectionVal)) {
                 try {
                     // await getClusterStats(clusterConnectionVal);
-                    await dispatch(getNodeInfoAsync(clusterConnectionVal));
+                    await dispatch(getClusterInfoAsync(clusterConnectionVal));
                     console.log("connected");
                     console.log("PRINTING THE THINGIES - ", clusterInfo);
                 } catch (err) {

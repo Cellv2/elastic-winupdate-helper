@@ -9,3 +9,12 @@ export type ElasticClusterInfo = {
     unassigned: number;
     activeShardPct: number;
 };
+
+export type ElasticNodeInfo = {
+    master: string;
+    nodeName: string;
+    heapPct: number;
+    ramPct: number;
+    cpuPct: number;
+    nodeUptime: string;
+};

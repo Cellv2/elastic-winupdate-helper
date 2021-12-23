@@ -1,6 +1,7 @@
 import {
     ElasticClusterHealth,
     ElasticClusterStateMasterNodeData,
+    ElasticNodeStats,
 } from "../../types/elastic.types";
 import { trimAndRemoveTrailingSlash } from "../../utils/string.utils";
 
@@ -38,7 +39,7 @@ export const getClusterStats = async (clusterUrl: string) => {
  * @param clusterUrl The cluster to request the node information from
  * @returns The node information
  */
-const getNodeStats = async (clusterUrl: string) => {
+const getNodeStats = async (clusterUrl: string): Promise<ElasticNodeStats> => {
     const checkedClusterUrl = trimAndRemoveTrailingSlash(clusterUrl);
 
     // TODO: think about the types to actually return here
@@ -47,13 +48,9 @@ const getNodeStats = async (clusterUrl: string) => {
     // name,jvm.mem.heap_used_percent,process.cpu.percent,process.mem.total_virtual_in_bytes,process.os.total_in_bytes
     try {
         const nodeStatsResponse = await fetch(
-            checkedClusterUrl + "/_nodes/stats/os,process",
-            {
-                method: "GET",
-            }
+            checkedClusterUrl + "/_nodes/stats/os,process,jvm"
         );
-        // const nodeStats = await nodeStatsResponse.json();
-        // console.log(nodeStats);
+
         return Promise.resolve(nodeStatsResponse.json());
     } catch (err) {
         // TODO: handle error notifications
