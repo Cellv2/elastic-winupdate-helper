@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState, AppThunk } from "../../app/store";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
 import {
     ElasticClusterHealth,
     ElasticNodeStats,
@@ -184,8 +184,6 @@ export const elasticSlice = createSlice({
         });
     },
 });
-
-export const {} = elasticSlice.actions;
 
 export const selectClusterNodeStats = (state: RootState) =>
     state.elastic.nodeStats;
