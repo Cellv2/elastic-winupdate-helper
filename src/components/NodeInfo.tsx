@@ -1,80 +1,29 @@
 import React from "react";
 import RbTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
+import { useAppSelector } from "../app/hooks";
+import { NODE_INFO_COLUMNS } from "../constants/component.constants";
+import {
+    selectClusterNodeStats,
+    selectMasterNodeName,
+} from "../features/elastic/elasticSlice";
+import { mapClusterNodeStatsComponentData } from "../utils/mappers.utils";
 
 type Props = {};
 
 // _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
-type ElasticNodeInfo = {
-    master: string;
-    nodeName: string;
-    heapPct: number;
-    ramPct: number;
-    cpuPct: number;
-    nodeUptime: string;
-};
 
 const NodeInfo = (props: Props) => {
-    const data = React.useMemo(
-        () =>
-            [
-                {
-                    master: "",
-                    nodeName: "es03",
-                    heapPct: 44,
-                    ramPct: 14,
-                    cpuPct: 0,
-                    nodeUptime: "2h",
-                },
-                {
-                    master: "*",
-                    nodeName: "es01",
-                    heapPct: 67,
-                    ramPct: 14,
-                    cpuPct: 0,
-                    nodeUptime: "2h",
-                },
-                {
-                    master: "",
-                    nodeName: "es02",
-                    heapPct: 44,
-                    ramPct: 14,
-                    cpuPct: 0,
-                    nodeUptime: "2h",
-                },
-            ] as ElasticNodeInfo[],
-        []
-    );
+    const clusterNodeStats = useAppSelector(selectClusterNodeStats);
+    const masterNode = useAppSelector(selectMasterNodeName);
 
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: "Master",
-                accessor: "master",
-            },
-            {
-                Header: "Node Name",
-                accessor: "nodeName",
-            },
-            {
-                Header: "Heap %",
-                accessor: "heapPct",
-            },
-            {
-                Header: "RAM %",
-                accessor: "ramPct",
-            },
-            {
-                Header: "CPU %",
-                accessor: "cpuPct",
-            },
-            {
-                Header: "Node Uptime",
-                accessor: "nodeUptime",
-            },
-        ],
-        []
+    const mappedData = mapClusterNodeStatsComponentData(
+        clusterNodeStats,
+        masterNode
     );
+    const data = React.useMemo(() => mappedData, [mappedData]);
+
+    const columns = React.useMemo(() => NODE_INFO_COLUMNS, []);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         // FIXME - typing for this are incorrect
