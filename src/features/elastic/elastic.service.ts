@@ -46,9 +46,11 @@ const getNodeStats = async (clusterUrl: string): Promise<ElasticNodeStats> => {
     // _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
     // do existing tools monitor host % cpu/ram or process
     // name,jvm.mem.heap_used_percent,process.cpu.percent,process.mem.total_virtual_in_bytes,process.os.total_in_bytes
+    // human query string param is used to get some additional data and save conversions
+    // https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#_human_readable_output
     try {
         const nodeStatsResponse = await fetch(
-            checkedClusterUrl + "/_nodes/stats/os,process,jvm"
+            checkedClusterUrl + "/_nodes/stats/os,process,jvm?human"
         );
 
         return Promise.resolve(nodeStatsResponse.json());

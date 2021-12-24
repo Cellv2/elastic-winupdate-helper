@@ -43,8 +43,10 @@ type ElasticNodeStatsOs = {
         used_percent: number;
     };
 };
+
 type ElasticNodeStatsJvm = {
     timestamp: number;
+    uptime: string; // relies on the human query string param on the API request
     uptime_in_millis: number;
     mem: {
         heap_used_in_bytes: number;

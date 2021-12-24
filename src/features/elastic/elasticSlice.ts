@@ -42,6 +42,7 @@ const emptyNodeStats: ElasticNodeStats = {
             name: "Unknown Node",
             jvm: {
                 timestamp: 0,
+                uptime: "0s",
                 uptime_in_millis: 0,
                 mem: {
                     heap_used_in_bytes: 0,

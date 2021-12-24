@@ -31,7 +31,7 @@ export const mapClusterNodeStatsComponentData = (
             cpuPct: node.os.cpu.percent,
             heapPct: node.jvm.mem.heap_used_percent,
             nodeName: node.name,
-            nodeUptime: "FIX ME!", // FIXME: calculate uptime (and where do we get this from? jvm? process?)
+            nodeUptime: node.jvm.uptime,
             ramPct: node.os.mem.used_percent, // TODO: is this the correct thing we are looking for? is it os or process?
             master,
         };
