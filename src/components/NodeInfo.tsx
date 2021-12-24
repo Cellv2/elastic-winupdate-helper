@@ -2,6 +2,7 @@ import React from "react";
 import RbTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
 import { useAppSelector } from "../app/hooks";
+import { NODE_INFO_COLUMNS } from "../constants/component.constants";
 import {
     selectClusterNodeStats,
     selectMasterNodeName,
@@ -22,35 +23,7 @@ const NodeInfo = (props: Props) => {
     );
     const data = React.useMemo(() => mappedData, [mappedData]);
 
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: "Master",
-                accessor: "master",
-            },
-            {
-                Header: "Node Name",
-                accessor: "nodeName",
-            },
-            {
-                Header: "Heap %",
-                accessor: "heapPct",
-            },
-            {
-                Header: "RAM %",
-                accessor: "ramPct",
-            },
-            {
-                Header: "CPU %",
-                accessor: "cpuPct",
-            },
-            {
-                Header: "Node Uptime",
-                accessor: "nodeUptime",
-            },
-        ],
-        []
-    );
+    const columns = React.useMemo(() => NODE_INFO_COLUMNS, []);
 
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         // FIXME - typing for this are incorrect
