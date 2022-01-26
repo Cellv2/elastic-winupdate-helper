@@ -4,7 +4,7 @@ import {
     ElasticClusterHealth,
     ElasticNodeStats,
 } from "../../types/elastic.types";
-import { getClusterStats } from "./elastic.service";
+import { getClusterStats, setClusterAllocation } from "./elastic.service";
 
 export type ElasticState = {
     value: number;
@@ -161,6 +161,13 @@ export const getClusterInfoAsync = createAsyncThunk(
     }
 );
 
+export const lockClusterAsync = createAsyncThunk(
+    "elastic/lockCluster",
+    async (clusterUrl: string) => {
+        await setClusterAllocation(clusterUrl);
+    }
+);
+
 export const elasticSlice = createSlice({
     name: "elastic",
     initialState,
@@ -182,6 +189,10 @@ export const elasticSlice = createSlice({
             state.masterNodeName = "Unknown";
             state.nodeStats = emptyNodeStats;
         });
+        // TODO: do we need to add lock cluster builder cases here?
+        builder.addCase(lockClusterAsync.pending, (state) => {});
+        builder.addCase(lockClusterAsync.fulfilled, (state) => {});
+        builder.addCase(lockClusterAsync.rejected, (state) => {});
     },
 });
 

@@ -12,6 +12,15 @@ export function fetchCount(amount = 1) {
     );
 }
 
+// https://www.elastic.co/guide/en/elasticsearch/guide/current/_rolling_restarts.html
+export const isClusterLocked = async (clusterUrl: string) => {
+    try {
+        const clusterSettings = await getClusterSettings(clusterUrl);
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 export const getClusterStats = async (clusterUrl: string) => {
     try {
         const nodeStats = await getNodeStats(clusterUrl);
@@ -28,6 +37,54 @@ export const getClusterStats = async (clusterUrl: string) => {
         return { nodeStats, clusterHealth, masterNodeName };
     } catch (err) {
         // TODO: handle error notifications
+        console.error(err);
+    }
+};
+
+type ElasticSearchSettings = {
+    persistent: ElasticSearchSettings_Cluster;
+    transient: ElasticSearchSettings_Cluster;
+};
+
+type ElasticSearchSettings_Cluster = {
+    cluster: {
+        routing: ElasticSearchSettings_Routing;
+    };
+};
+
+type ElasticSearchSettings_Routing = {
+    allocation: {
+        enable: boolean;
+    };
+};
+
+const getClusterSettings = async (clusterUrl: string) => {};
+
+export const setClusterAllocation = async (clusterUrl: string) => {
+    const checkedClusterUrl = trimAndRemoveTrailingSlash(clusterUrl);
+
+    // ES docs recomment using persistent over transient, but we set both to be sure
+    // https://www.elastic.co/guide/en/elasticsearch/reference/current/transient-settings-migration-guide.html
+    const body = JSON.stringify({
+        persistent: {
+            "cluster.routing.allocation.enable": "none",
+        },
+        transient: {
+            "cluster.routing.allocation.enable": "none",
+        },
+    });
+    try {
+        const clusterSettingsResponse = await fetch(
+            checkedClusterUrl + "/_cluster/settings",
+            {
+                body,
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+    } catch (err) {
         console.error(err);
     }
 };
