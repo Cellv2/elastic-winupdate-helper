@@ -60,19 +60,42 @@ type ElasticSearchSettings_Routing = {
 
 const getClusterSettings = async (clusterUrl: string) => {};
 
-export const setClusterAllocation = async (clusterUrl: string) => {
-    const checkedClusterUrl = trimAndRemoveTrailingSlash(clusterUrl);
+const clusterAllocationStates = ["lock", "unlock"] as const;
+type ClusterAllocationStates = typeof clusterAllocationStates[number];
 
-    // ES docs recomment using persistent over transient, but we set both to be sure
-    // https://www.elastic.co/guide/en/elasticsearch/reference/current/transient-settings-migration-guide.html
-    const body = JSON.stringify({
+const clusterAllocationBodies: Record<ClusterAllocationStates, object> = {
+    lock: {
         persistent: {
             "cluster.routing.allocation.enable": "none",
         },
         transient: {
             "cluster.routing.allocation.enable": "none",
         },
-    });
+    },
+    unlock: {
+        persistent: {
+            "cluster.routing.allocation.enable": "all",
+        },
+        transient: {
+            "cluster.routing.allocation.enable": "all",
+        },
+    },
+};
+
+export const setClusterAllocation = async (
+    clusterUrl: string,
+    stateToSet: ClusterAllocationStates
+) => {
+    const checkedClusterUrl = trimAndRemoveTrailingSlash(clusterUrl);
+
+    // ES docs recomment using persistent over transient, but we set both to be sure
+    // https://www.elastic.co/guide/en/elasticsearch/reference/current/transient-settings-migration-guide.html
+    const body =
+        stateToSet === "lock"
+            ? JSON.stringify(clusterAllocationBodies.lock)
+            : JSON.stringify(clusterAllocationBodies.unlock);
+
+    console.log(body);
     try {
         const clusterSettingsResponse = await fetch(
             checkedClusterUrl + "/_cluster/settings",

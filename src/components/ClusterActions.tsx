@@ -4,7 +4,10 @@ import RbCol from "react-bootstrap/Col";
 import RbContainer from "react-bootstrap/Container";
 import RbRow from "react-bootstrap/Row";
 import { useAppDispatch } from "../app/hooks";
-import { lockClusterAsync } from "../features/elastic/elasticSlice";
+import {
+    lockClusterAsync,
+    unlockClusterAsync,
+} from "../features/elastic/elasticSlice";
 
 type Props = {};
 
@@ -56,7 +59,14 @@ const ClusterActions = (props: Props) => {
             <RbRow className="my-2 align-items-center">
                 <RbCol xs={4}>
                     <div className="d-grid">
-                        <RbButton variant="outline-secondary">
+                        <RbButton
+                            variant="outline-secondary"
+                            onClick={() =>
+                                dispatch(
+                                    unlockClusterAsync("http://localhost:9200")
+                                )
+                            }
+                        >
                             Unlock cluster
                         </RbButton>
                     </div>

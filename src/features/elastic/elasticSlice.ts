@@ -164,7 +164,14 @@ export const getClusterInfoAsync = createAsyncThunk(
 export const lockClusterAsync = createAsyncThunk(
     "elastic/lockCluster",
     async (clusterUrl: string) => {
-        await setClusterAllocation(clusterUrl);
+        await setClusterAllocation(clusterUrl, "lock");
+    }
+);
+
+export const unlockClusterAsync = createAsyncThunk(
+    "elastic/unlockCluster",
+    async (clusterUrl: string) => {
+        await setClusterAllocation(clusterUrl, "unlock");
     }
 );
 
@@ -193,6 +200,9 @@ export const elasticSlice = createSlice({
         builder.addCase(lockClusterAsync.pending, (state) => {});
         builder.addCase(lockClusterAsync.fulfilled, (state) => {});
         builder.addCase(lockClusterAsync.rejected, (state) => {});
+        builder.addCase(unlockClusterAsync.pending, (state) => {});
+        builder.addCase(unlockClusterAsync.fulfilled, (state) => {});
+        builder.addCase(unlockClusterAsync.rejected, (state) => {});
     },
 });
 
