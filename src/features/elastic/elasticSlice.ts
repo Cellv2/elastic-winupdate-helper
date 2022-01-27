@@ -196,13 +196,25 @@ export const elasticSlice = createSlice({
             state.masterNodeName = "Unknown";
             state.nodeStats = emptyNodeStats;
         });
-        // TODO: do we need to add lock cluster builder cases here?
-        builder.addCase(lockClusterAsync.pending, (state) => {});
-        builder.addCase(lockClusterAsync.fulfilled, (state) => {});
-        builder.addCase(lockClusterAsync.rejected, (state) => {});
-        builder.addCase(unlockClusterAsync.pending, (state) => {});
-        builder.addCase(unlockClusterAsync.fulfilled, (state) => {});
-        builder.addCase(unlockClusterAsync.rejected, (state) => {});
+
+        builder.addCase(lockClusterAsync.pending, (state) => {
+            // TODO: add message - cluster is locking
+        });
+        builder.addCase(lockClusterAsync.fulfilled, (state) => {
+            // TODO: add message - cluster successfully locked
+        });
+        builder.addCase(lockClusterAsync.rejected, (state) => {
+            // TODO: add message - cluster failed to lock, please try again
+        });
+        builder.addCase(unlockClusterAsync.pending, (state) => {
+            // TODO: add message - cluster is unlocking
+        });
+        builder.addCase(unlockClusterAsync.fulfilled, (state) => {
+            // TODO: add message - cluster successfully unlocked
+        });
+        builder.addCase(unlockClusterAsync.rejected, (state) => {
+            // TODO: add message - cluster failed to unlock, please try again
+        });
     },
 });
 
