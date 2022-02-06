@@ -13,11 +13,49 @@ export function fetchCount(amount = 1) {
 }
 
 // https://www.elastic.co/guide/en/elasticsearch/guide/current/_rolling_restarts.html
-export const isClusterLocked = async (clusterUrl: string) => {
+
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html#cluster-shard-allocation-settings
+const shardAllocationSettings = [
+    "all",
+    "primaries",
+    "new_primaries",
+    "none",
+] as const;
+type ClusterLevelShardAllocationSettings = {
+    persistent: typeof shardAllocationSettings[number];
+    transient: typeof shardAllocationSettings[number];
+};
+
+export const getClusterLockedStatus = async (
+    clusterUrl: string
+): Promise<ClusterLevelShardAllocationSettings> => {
     try {
-        const clusterSettings = await getClusterSettings(clusterUrl);
+        const clusterSettings = await getClusterSettings(clusterUrl, true);
+        console.log(clusterSettings);
+
+        // it's possible that nothing is explicitly set, so we have to check defaults too
+        let persistent =
+            clusterSettings.persistent.cluster.routing.allocation.enable;
+        if (!persistent) {
+            persistent =
+                clusterSettings.defaults.cluster.routing.allocation.enable;
+        }
+
+        // it's possible that nothing is explicitly set, so we have to check defaults too
+        let transient =
+            clusterSettings.transient.cluster.routing.allocation.enable;
+        if (!transient) {
+            transient =
+                clusterSettings.defaults.cluster.routing.allocation.enable;
+        }
+
+        return Promise.resolve({
+            persistent,
+            transient,
+        });
     } catch (err) {
         console.error(err);
+        return Promise.reject("FIXME!");
     }
 };
 
@@ -54,11 +92,31 @@ type ElasticSearchSettings_Cluster = {
 
 type ElasticSearchSettings_Routing = {
     allocation: {
-        enable: boolean;
+        enable: typeof shardAllocationSettings[number];
     };
 };
 
-const getClusterSettings = async (clusterUrl: string) => {};
+const getClusterSettings = async (
+    clusterUrl: string,
+    includeDefaults?: boolean
+) => {
+    const checkedClusterUrl = trimAndRemoveTrailingSlash(clusterUrl);
+
+    try {
+        const clusterSettingsResponse = await fetch(
+            checkedClusterUrl +
+                `/_cluster/settings${
+                    includeDefaults ? "?include_defaults" : ""
+                }`
+        );
+
+        return Promise.resolve(clusterSettingsResponse.json());
+    } catch (err) {
+        // TODO: handle error notifications
+        console.error(err);
+        return Promise.reject("FIXME!");
+    }
+};
 
 const clusterAllocationStates = ["lock", "unlock"] as const;
 type ClusterAllocationStates = typeof clusterAllocationStates[number];
