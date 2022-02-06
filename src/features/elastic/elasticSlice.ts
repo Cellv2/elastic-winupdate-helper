@@ -1,10 +1,16 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../../app/store";
 import {
+    ClusterLevelShardAllocationSettings,
     ElasticClusterHealth,
     ElasticNodeStats,
 } from "../../types/elastic.types";
-import { getClusterStats, setClusterAllocation } from "./elastic.service";
+import { determineIfClusterIsLocked } from "../../utils/elastic.utils";
+import {
+    getClusterLockedStatus,
+    getClusterStats,
+    setClusterAllocation,
+} from "./elastic.service";
 
 export type ElasticState = {
     value: number;
@@ -12,6 +18,8 @@ export type ElasticState = {
     clusterHealth: ElasticClusterHealth;
     masterNodeName: string;
     nodeStats: ElasticNodeStats; // _cat/nodes?v=true&h=heap.percent,ram.percent,cpu,master,name,u
+    clusterShardAllocationStates: ClusterLevelShardAllocationSettings | null;
+    isClusterLocked: boolean | "Unknown";
 };
 
 const emptyClusterHealth: ElasticClusterHealth = {
@@ -151,6 +159,8 @@ const initialState: ElasticState = {
     clusterHealth: emptyClusterHealth,
     masterNodeName: "Unknown",
     nodeStats: emptyNodeStats,
+    clusterShardAllocationStates: null,
+    isClusterLocked: "Unknown",
 };
 
 export const getClusterInfoAsync = createAsyncThunk(
@@ -172,6 +182,14 @@ export const unlockClusterAsync = createAsyncThunk(
     "elastic/unlockCluster",
     async (clusterUrl: string) => {
         await setClusterAllocation(clusterUrl, "unlock");
+    }
+);
+
+export const getClusterShardAllocationStateAsync = createAsyncThunk(
+    "/elastic/getClusterShardAllocationState",
+    async (clusterUrl: string) => {
+        const response = await getClusterLockedStatus(clusterUrl);
+        return response;
     }
 );
 
@@ -215,6 +233,30 @@ export const elasticSlice = createSlice({
         builder.addCase(unlockClusterAsync.rejected, (state) => {
             // TODO: add message - cluster failed to unlock, please try again
         });
+        builder.addCase(
+            getClusterShardAllocationStateAsync.pending,
+            (state) => {
+                state.status = "loading";
+            }
+        );
+        builder.addCase(
+            getClusterShardAllocationStateAsync.fulfilled,
+            (state, action) => {
+                state.status = "idle";
+                state.clusterShardAllocationStates = action.payload ?? null;
+                state.isClusterLocked = determineIfClusterIsLocked(
+                    action.payload
+                );
+            }
+        );
+        builder.addCase(
+            getClusterShardAllocationStateAsync.rejected,
+            (state) => {
+                state.status = "failed";
+                state.clusterShardAllocationStates = null;
+                state.isClusterLocked = "Unknown";
+            }
+        );
     },
 });
 
@@ -231,5 +273,11 @@ export const selectClusterName = (state: RootState) =>
 
 export const selectMasterNodeName = (state: RootState) =>
     state.elastic.masterNodeName;
+
+export const selectClusterShardAllocationStates = (state: RootState) =>
+    state.elastic.clusterShardAllocationStates;
+
+export const selectIsClusterLocked = (state: RootState) =>
+    state.elastic.isClusterLocked;
 
 export default elasticSlice.reducer;

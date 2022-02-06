@@ -3,15 +3,19 @@ import RbTable from "react-bootstrap/Table";
 import { useTable } from "react-table";
 import { useAppSelector } from "../app/hooks";
 import { CLUSTER_INFO_COLUMNS } from "../constants/component.constants";
-import { selectClusterHealth } from "../features/elastic/elasticSlice";
+import {
+    selectClusterHealth,
+    selectIsClusterLocked,
+} from "../features/elastic/elasticSlice";
 import { mapClusterHealthComponentData } from "../utils/mappers.utils";
 
 type Props = {};
 
 const ClusterInfo = (props: Props) => {
     const clusterHealth = useAppSelector(selectClusterHealth);
+    const clusterLockState = useAppSelector(selectIsClusterLocked);
 
-    const mappedData = mapClusterHealthComponentData(clusterHealth);
+    const mappedData = mapClusterHealthComponentData(clusterHealth, clusterLockState);
     const data = React.useMemo(() => [mappedData], [mappedData]);
 
     const columns = React.useMemo(() => CLUSTER_INFO_COLUMNS, []);

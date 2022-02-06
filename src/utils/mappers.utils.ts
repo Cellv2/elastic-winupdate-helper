@@ -1,12 +1,14 @@
+import { ElasticState } from "../features/elastic/elasticSlice";
 import { ElasticClusterInfo, ElasticNodeInfo } from "../types/component.types";
 import { ElasticClusterHealth, ElasticNodeStats } from "../types/elastic.types";
 
 export const mapClusterHealthComponentData = (
-    clusterHealthData: ElasticClusterHealth
+    clusterHealthData: ElasticClusterHealth,
+    clusterLockedState: ElasticState["isClusterLocked"]
 ): Partial<ElasticClusterInfo> => {
     const mappedObj: Partial<ElasticClusterInfo> = {
         status: clusterHealthData.status,
-        isLocked: "false",
+        isLocked: String(clusterLockedState),
         nodeTotal: clusterHealthData.number_of_nodes,
         relocating: clusterHealthData.relocating_shards,
         initialising: clusterHealthData.initializing_shards,

@@ -3,7 +3,11 @@ import RbButton from "react-bootstrap/Button";
 import RbForm from "react-bootstrap/Form";
 import RbInputGroup from "react-bootstrap/InputGroup";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getClusterInfoAsync, selectClusterNodeStats } from "./elasticSlice";
+import {
+    getClusterInfoAsync,
+    getClusterShardAllocationStateAsync,
+    selectClusterNodeStats,
+} from "./elasticSlice";
 
 type Props = {};
 
@@ -38,6 +42,11 @@ const ElasticConnectButton = (props: Props) => {
                 try {
                     // await getClusterStats(clusterConnectionVal);
                     await dispatch(getClusterInfoAsync(clusterConnectionVal));
+                    await dispatch(
+                        getClusterShardAllocationStateAsync(
+                            clusterConnectionVal
+                        )
+                    );
                     console.log("connected");
                     console.log("PRINTING THE THINGIES - ", clusterInfo);
                 } catch (err) {

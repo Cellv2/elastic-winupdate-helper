@@ -1,4 +1,5 @@
 import {
+    ClusterLevelShardAllocationSettings,
     ElasticClusterHealth,
     ElasticClusterStateMasterNodeData,
     ElasticNodeStats,
@@ -13,18 +14,6 @@ export function fetchCount(amount = 1) {
 }
 
 // https://www.elastic.co/guide/en/elasticsearch/guide/current/_rolling_restarts.html
-
-// https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html#cluster-shard-allocation-settings
-const shardAllocationSettings = [
-    "all",
-    "primaries",
-    "new_primaries",
-    "none",
-] as const;
-type ClusterLevelShardAllocationSettings = {
-    persistent: typeof shardAllocationSettings[number];
-    transient: typeof shardAllocationSettings[number];
-};
 
 export const getClusterLockedStatus = async (
     clusterUrl: string
@@ -77,23 +66,6 @@ export const getClusterStats = async (clusterUrl: string) => {
         // TODO: handle error notifications
         console.error(err);
     }
-};
-
-type ElasticSearchSettings = {
-    persistent: ElasticSearchSettings_Cluster;
-    transient: ElasticSearchSettings_Cluster;
-};
-
-type ElasticSearchSettings_Cluster = {
-    cluster: {
-        routing: ElasticSearchSettings_Routing;
-    };
-};
-
-type ElasticSearchSettings_Routing = {
-    allocation: {
-        enable: typeof shardAllocationSettings[number];
-    };
 };
 
 const getClusterSettings = async (
@@ -154,6 +126,9 @@ export const setClusterAllocation = async (
             : JSON.stringify(clusterAllocationBodies.unlock);
 
     console.log(body);
+
+    // TODO: return SOMETHING ??? ???
+
     try {
         const clusterSettingsResponse = await fetch(
             checkedClusterUrl + "/_cluster/settings",

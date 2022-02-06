@@ -146,3 +146,32 @@ export type ElasticClusterStateMasterNodeData = {
         };
     };
 };
+
+export type ElasticSearchSettings = {
+    persistent: ElasticSearchSettings_Cluster;
+    transient: ElasticSearchSettings_Cluster;
+};
+
+export type ElasticSearchSettings_Cluster = {
+    cluster: {
+        routing: ElasticSearchSettings_Routing;
+    };
+};
+
+export type ElasticSearchSettings_Routing = {
+    allocation: {
+        enable: typeof shardAllocationSettings[number];
+    };
+};
+
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-cluster.html#cluster-shard-allocation-settings
+const shardAllocationSettings = [
+    "all",
+    "primaries",
+    "new_primaries",
+    "none",
+] as const;
+export type ClusterLevelShardAllocationSettings = {
+    persistent: typeof shardAllocationSettings[number];
+    transient: typeof shardAllocationSettings[number];
+};
