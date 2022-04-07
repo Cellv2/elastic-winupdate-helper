@@ -10,6 +10,7 @@ import {
     getClusterLockedStatus,
     getClusterStats,
     setClusterAllocation,
+    setConcurrentRecoveryCount,
 } from "./elastic.service";
 
 export type ElasticState = {
@@ -171,6 +172,21 @@ export const getClusterInfoAsync = createAsyncThunk(
     }
 );
 
+export const setConcurrentRecoveryCountAsync = createAsyncThunk(
+    "elastic/setConcurrentRecoveryCount",
+    async (concurrentRecoveryCountObj: {
+        clusterUrl: string;
+        recoveryCount: number;
+    }) => {
+        const { clusterUrl, recoveryCount } = concurrentRecoveryCountObj;
+        const response = await setConcurrentRecoveryCount(
+            clusterUrl,
+            recoveryCount
+        );
+        return response;
+    }
+);
+
 export const lockClusterAsync = createAsyncThunk(
     "elastic/lockCluster",
     async (clusterUrl: string) => {
@@ -257,6 +273,15 @@ export const elasticSlice = createSlice({
                 state.isClusterLocked = "Unknown";
             }
         );
+        builder.addCase(setConcurrentRecoveryCountAsync.pending, (state) => {
+            // TODO: update UI for whether this succeeded and the count it's set to?
+        });
+        builder.addCase(setConcurrentRecoveryCountAsync.fulfilled, (state) => {
+            // TODO: update UI for whether this succeeded and the count it's set to?
+        });
+        builder.addCase(setConcurrentRecoveryCountAsync.rejected, (state) => {
+            // TODO: update UI for whether this succeeded and the count it's set to?
+        });
     },
 });
 

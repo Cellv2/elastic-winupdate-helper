@@ -6,6 +6,7 @@ import RbRow from "react-bootstrap/Row";
 import { useAppDispatch } from "../app/hooks";
 import {
     lockClusterAsync,
+    setConcurrentRecoveryCountAsync,
     unlockClusterAsync,
 } from "../features/elastic/elasticSlice";
 
@@ -47,7 +48,17 @@ const ClusterActions = (props: Props) => {
             <RbRow className="my-2 align-items-center">
                 <RbCol xs={4}>
                     <div className="d-grid">
-                        <RbButton variant="outline-secondary">
+                        <RbButton
+                            variant="outline-secondary"
+                            onClick={() =>
+                                dispatch(
+                                    setConcurrentRecoveryCountAsync({
+                                        clusterUrl: "http://localhost:9200",
+                                        recoveryCount: 20,
+                                    })
+                                )
+                            }
+                        >
                             Update shard reallocation count - Lock
                         </RbButton>
                     </div>
@@ -76,7 +87,17 @@ const ClusterActions = (props: Props) => {
             <RbRow className="my-2 align-items-center">
                 <RbCol xs={4}>
                     <div className="d-grid">
-                        <RbButton variant="outline-secondary">
+                        <RbButton
+                            variant="outline-secondary"
+                            onClick={() =>
+                                dispatch(
+                                    setConcurrentRecoveryCountAsync({
+                                        clusterUrl: "http://localhost:9200",
+                                        recoveryCount: 5,
+                                    })
+                                )
+                            }
+                        >
                             Update shard reallocation count - Unlock
                         </RbButton>
                     </div>

@@ -145,6 +145,36 @@ export const setClusterAllocation = async (
     }
 };
 
+export const setConcurrentRecoveryCount = async (
+    clusterUrl: string,
+    recoveryCount: number
+) => {
+    const checkedClusterUrl = trimAndRemoveTrailingSlash(clusterUrl);
+
+    const body = JSON.stringify({
+        persistent: {
+            "cluster.routing.allocation.node_concurrent_recoveries":
+                recoveryCount,
+        },
+        transient: {
+            "cluster.routing.allocation.node_concurrent_recoveries":
+                recoveryCount,
+        },
+    });
+
+    try {
+        const response = await fetch(checkedClusterUrl + "/_cluster/settings", {
+            body,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 /**
  * TODO: Write this up (what do we actually need here)
  * https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-stats.html
